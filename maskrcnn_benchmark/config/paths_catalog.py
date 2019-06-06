@@ -2,6 +2,7 @@
 """Centralized catalog of paths."""
 
 import os
+import copy
 
 
 class DatasetCatalog(object):
@@ -103,6 +104,12 @@ class DatasetCatalog(object):
         "cityscapes_fine_instanceonly_seg_test_cocostyle": {
             "img_dir": "cityscapes/images",
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
+        },
+        "VG_stanford_filtered": {
+            "img_dir": "VG_100K_2/VG_100K"
+            "roidb_file": "vg/stanford_filtered/VG-SGG.h5",
+            "dict_file": "vg/stanford_filtered/VG-SGG-dicts.json",
+            "image_file": "vg/stanford_filtered/image_data.json",
         }
     }
 
@@ -130,6 +137,21 @@ class DatasetCatalog(object):
                 factory="PascalVOCDataset",
                 args=args,
             )
+        elif "VG" in name:
+            # name should be something like VG_stanford_filtered_train
+            p = name.rfind("_")
+            name, split = name[:p], name[p+1:]
+            assert name in DatasetCatalog.DATASETS and split in {'train', 'val', 'test'}
+            data_dir = DatasetCatalog.DATA_DIR
+            args = copy.deepcopy(DatasetCatalog.DATASETS[name])
+            for k, v in args:
+                args[k] = os.path.join(data_dir, v)
+            args['split'] = split
+            return dict(
+                factory="VGDataset",
+                args=args,
+            )
+
         raise RuntimeError("Dataset not available: {}".format(name))
 
 
