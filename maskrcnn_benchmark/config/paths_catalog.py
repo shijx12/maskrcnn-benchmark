@@ -106,10 +106,16 @@ class DatasetCatalog(object):
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
         },
         "VG_stanford_filtered": {
-            "img_dir": "VG_100K_2/VG_100K"
-            "roidb_file": "vg/stanford_filtered/VG-SGG.h5",
-            "dict_file": "vg/stanford_filtered/VG-SGG-dicts.json",
-            "image_file": "vg/stanford_filtered/image_data.json",
+            "img_dir": "vg/VG_100K",
+            "roidb_file": "vg/VG-SGG.h5",
+            "dict_file": "vg/VG-SGG-dicts.json",
+            "image_file": "vg/image_data.json",
+        },
+        "GQA": {
+            "img_dir": "gqa/images",
+            "roidb_file": "GQA-SGG.h5",
+            "dict_file": "GQA-SGG-dicts.json",
+            "image_file": "gqa_image_data.json",
         }
     }
 

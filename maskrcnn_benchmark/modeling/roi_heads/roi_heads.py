@@ -4,6 +4,7 @@ import torch
 from .box_head.box_head import build_roi_box_head
 from .mask_head.mask_head import build_roi_mask_head
 from .keypoint_head.keypoint_head import build_roi_keypoint_head
+from .relation_head.relation_head import build_roi_relation_head
 
 
 class CombinedROIHeads(torch.nn.ModuleDict):
@@ -19,6 +20,9 @@ class CombinedROIHeads(torch.nn.ModuleDict):
             self.mask.feature_extractor = self.box.feature_extractor
         if cfg.MODEL.KEYPOINT_ON and cfg.MODEL.ROI_KEYPOINT_HEAD.SHARE_BOX_FEATURE_EXTRACTOR:
             self.keypoint.feature_extractor = self.box.feature_extractor
+        # TODO Kaihua Tang
+        if cfg.MODEL.RELATION_ON and cfg.MODEL.ROI_RELATION_HEAD.SHARE_BOX_FEATURE_EXTRACTOR:
+            self.relation.feature_extractor = self.box.feature_extractor
 
     def forward(self, features, proposals, targets=None):
         losses = {}
@@ -52,6 +56,10 @@ class CombinedROIHeads(torch.nn.ModuleDict):
             # this makes the API consistent during training and testing
             x, detections, loss_keypoint = self.keypoint(keypoint_features, detections, targets)
             losses.update(loss_keypoint)
+
+        if self.cfg.MODEL.RELATION_ON:
+            relation_features = features
+            # TODO Kaihua Tang
         return x, detections, losses
 
 
@@ -68,6 +76,8 @@ def build_roi_heads(cfg, in_channels):
         roi_heads.append(("mask", build_roi_mask_head(cfg, in_channels)))
     if cfg.MODEL.KEYPOINT_ON:
         roi_heads.append(("keypoint", build_roi_keypoint_head(cfg, in_channels)))
+    if cfg.MODEL.RELATION_ON:
+        roi_heads.append(("relation", build_roi_relation_head(cfg, in_channels)))
 
     # combine individual heads in a single module
     if roi_heads:
