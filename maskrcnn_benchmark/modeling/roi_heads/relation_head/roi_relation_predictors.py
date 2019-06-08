@@ -2,6 +2,7 @@
 from maskrcnn_benchmark.modeling import registry
 from torch import nn
 
+# TODO Kaihua Tang
 @registry.ROI_RELATION_PREDICTOR.register("MotifPredictor")
 class MotifPredictor(nn.Module):
     def __init__(self, config, in_channels):
