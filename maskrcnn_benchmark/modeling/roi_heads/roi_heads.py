@@ -20,7 +20,6 @@ class CombinedROIHeads(torch.nn.ModuleDict):
             self.mask.feature_extractor = self.box.feature_extractor
         if cfg.MODEL.KEYPOINT_ON and cfg.MODEL.ROI_KEYPOINT_HEAD.SHARE_BOX_FEATURE_EXTRACTOR:
             self.keypoint.feature_extractor = self.box.feature_extractor
-        # TODO Kaihua Tang
         if cfg.MODEL.RELATION_ON and cfg.MODEL.ROI_RELATION_HEAD.SHARE_BOX_FEATURE_EXTRACTOR:
             self.relation.feature_extractor = self.box.feature_extractor
 
@@ -59,7 +58,18 @@ class CombinedROIHeads(torch.nn.ModuleDict):
 
         if self.cfg.MODEL.RELATION_ON:
             relation_features = features
-            # TODO Kaihua Tang
+            # optimization: during training, if we share the feature extractor between
+            # the box and the mask heads, then we can reuse the features already computed
+            if (
+                self.training
+                and self.cfg.MODEL.ROI_RELATION_HEAD.SHARE_BOX_FEATURE_EXTRACTOR
+            ):
+                relation_features = x
+            # During training, self.box() will return the unaltered proposals as "detections"
+            # this makes the API consistent during training and testing
+            x, detections, loss_relation = self.relation(relation_features, detections, targets)
+            losses.update(loss_relation)
+
         return x, detections, losses
 
 

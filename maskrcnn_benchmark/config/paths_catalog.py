@@ -113,9 +113,9 @@ class DatasetCatalog(object):
         },
         "GQA": {
             "img_dir": "gqa/images",
-            "roidb_file": "GQA-SGG.h5",
-            "dict_file": "GQA-SGG-dicts.json",
-            "image_file": "gqa_image_data.json",
+            "roidb_file": "gqa/GQA-SGG.h5",
+            "dict_file": "gqa/GQA-SGG-dicts.json",
+            "image_file": "gqa/gqa_image_data.json",
         }
     }
 

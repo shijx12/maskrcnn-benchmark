@@ -72,8 +72,13 @@ class VGDataset(torch.utils.data.Dataset):
                 all_rel_sets[(o0, o1)].append(r)
             relation = [(k[0], k[1], np.random.choice(v)) for k,v in all_rel_sets.items()]
             relation = np.array(relation)
+        
+        # add relation to target
+        # TODO Kaihua Tang
+        # check whether it is valid
+        target.add_field("relation", relation)
 
-        return img, target, relation, index
+        return img, target, index
 
 
     def __len__(self):

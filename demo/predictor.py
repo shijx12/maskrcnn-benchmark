@@ -212,6 +212,8 @@ class COCODemo(object):
             result = self.overlay_mask(result, top_predictions)
         if self.cfg.MODEL.KEYPOINT_ON:
             result = self.overlay_keypoints(result, top_predictions)
+        # TODO Kaihua Tang
+        # Add relation and attribute
         result = self.overlay_class_names(result, top_predictions)
 
         return result

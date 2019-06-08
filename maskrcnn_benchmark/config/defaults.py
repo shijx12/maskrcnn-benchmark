@@ -256,6 +256,8 @@ _C.MODEL.ROI_KEYPOINT_HEAD.SHARE_BOX_FEATURE_EXTRACTOR = True
 
 # TODO Kaihua Tang
 _C.MODEL.ROI_RELATION_HEAD.SHARE_BOX_FEATURE_EXTRACTOR = True
+_C.MODEL.ROI_RELATION_HEAD.PREDICTOR = "MotifPredictor"
+_C.MODEL.ROI_RELATION_HEAD.NUM_CLASSES = 51
 
 # ---------------------------------------------------------------------------- #
 # ResNe[X]t options (ResNets = {ResNet, ResNeXt}
